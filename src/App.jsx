@@ -5,12 +5,13 @@ import SearchBar from './components/SearchBar'
 import ProductList from './components/ProductList'
 import Modal from './components/Modal'
 import ProductForm from './components/ProductForm'
+import DeleteConfirm from './components/DeleteConfirm'
 import './App.css'
 
 function App() {
   const [products, setProducts] = useState(initialProducts)
   const [query, setQuery] = useState('')
-  // modal: null | { type: 'add' } | { type: 'edit', product }
+  // modal: null | { type: 'add' } | { type: 'edit' | 'delete', product }
   const [modal, setModal] = useState(null)
   const nextId = useRef(initialProducts.length + 1)
 
@@ -42,7 +43,14 @@ function App() {
     closeModal()
   }
 
-  function handleDelete() {}
+  function handleDelete(product) {
+    setModal({ type: 'delete', product })
+  }
+
+  function handleConfirmDelete() {
+    setProducts(products.filter((p) => p.id !== modal.product.id))
+    closeModal()
+  }
 
   return (
     <main className="app">
@@ -76,3 +84,18 @@ function App() {
           />
         </Modal>
       )}
+
+      {modal?.type === 'delete' && (
+        <Modal onClose={closeModal}>
+          <DeleteConfirm
+            product={modal.product}
+            onConfirm={handleConfirmDelete}
+            onCancel={closeModal}
+          />
+        </Modal>
+      )}
+    </main>
+  )
+}
+
+export default App
