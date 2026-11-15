@@ -10,7 +10,7 @@ import './App.css'
 function App() {
   const [products, setProducts] = useState(initialProducts)
   const [query, setQuery] = useState('')
-  // modal: null | { type: 'add' }
+  // modal: null | { type: 'add' } | { type: 'edit', product }
   const [modal, setModal] = useState(null)
   const nextId = useRef(initialProducts.length + 1)
 
@@ -31,7 +31,17 @@ function App() {
     closeModal()
   }
 
-  function handleEdit() {}
+  function handleEdit(product) {
+    setModal({ type: 'edit', product })
+  }
+
+  function handleUpdate(data) {
+    setProducts(
+      products.map((p) => (p.id === modal.product.id ? { ...p, ...data } : p)),
+    )
+    closeModal()
+  }
+
   function handleDelete() {}
 
   return (
@@ -56,8 +66,13 @@ function App() {
           <ProductForm onSubmit={handleCreate} onCancel={closeModal} />
         </Modal>
       )}
-    </main>
-  )
-}
 
-export default App
+      {modal?.type === 'edit' && (
+        <Modal onClose={closeModal}>
+          <ProductForm
+            product={modal.product}
+            onSubmit={handleUpdate}
+            onCancel={closeModal}
+          />
+        </Modal>
+      )}
