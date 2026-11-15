@@ -1,5 +1,26 @@
+import { useState } from 'react'
+import { initialProducts } from './data/products'
+import PageHeader from './components/PageHeader'
+import ProductList from './components/ProductList'
+import './App.css'
+
 function App() {
-  return <h1>Manajemen Produk</h1>
+  const [products, setProducts] = useState(initialProducts)
+
+  function handleAdd() {}
+  function handleEdit() {}
+  function handleDelete() {}
+
+  return (
+    <main className="app">
+      <PageHeader onAdd={handleAdd} />
+      <ProductList
+        products={products}
+        onEdit={handleEdit}
+        onDelete={handleDelete}
+      />
+    </main>
+  )
 }
 
 export default App
