@@ -1,0 +1,38 @@
+.delete-confirm {
+  text-align: center;
+}
+
+.delete-confirm__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  margin-bottom: 8px;
+  border-radius: 10px;
+  background: var(--danger-soft);
+  font-size: 1.3rem;
+}
+
+.delete-confirm__product {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  text-align: left;
+  font-size: 0.75rem;
+  color: var(--muted);
+}
+
+.delete-confirm__product strong {
+  font-size: 1rem;
+  color: var(--text);
+}
+
+.delete-confirm__price {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--primary);
+}
