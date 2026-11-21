@@ -1,101 +1,110 @@
-import { useRef, useState } from 'react'
-import { initialProducts } from './data/products'
-import PageHeader from './components/PageHeader'
-import SearchBar from './components/SearchBar'
-import ProductList from './components/ProductList'
-import Modal from './components/Modal'
-import ProductForm from './components/ProductForm'
-import DeleteConfirm from './components/DeleteConfirm'
-import './App.css'
+import { useRef, useState } from "react"
+import { initialProducts } from "./data/products"
+import type { Product, ProductFormValues } from "./types/product"
+import PageHeader from "./components/PageHeader"
+import SearchBar from "./components/SearchBar"
+import ProductList from "./components/ProductList"
+import Modal from "./components/Modal"
+import ProductForm from "./components/ProductForm"
+import DeleteConfirm from "./components/DeleteConfirm"
+import "./App.css"
+
+type ModalState =
+    | null
+    | { type: "add" }
+    | { type: "edit" | "delete"; product: Product }
 
 function App() {
-  const [products, setProducts] = useState(initialProducts)
-  const [query, setQuery] = useState('')
-  // modal: null | { type: 'add' } | { type: 'edit' | 'delete', product }
-  const [modal, setModal] = useState(null)
-  const nextId = useRef(initialProducts.length + 1)
+    const [products, setProducts] = useState(initialProducts)
+    const [query, setQuery] = useState("")
+    const [modal, setModal] = useState<ModalState>(null)
+    const nextId = useRef(initialProducts.length + 1)
 
-  const filteredProducts = products.filter((product) =>
-    product.name.toLowerCase().includes(query.trim().toLowerCase()),
-  )
-
-  function closeModal() {
-    setModal(null)
-  }
-
-  function handleAdd() {
-    setModal({ type: 'add' })
-  }
-
-  function handleCreate(data) {
-    setProducts([...products, { id: nextId.current++, ...data }])
-    closeModal()
-  }
-
-  function handleEdit(product) {
-    setModal({ type: 'edit', product })
-  }
-
-  function handleUpdate(data) {
-    setProducts(
-      products.map((p) => (p.id === modal.product.id ? { ...p, ...data } : p)),
+    const filteredProducts = products.filter((product) =>
+        product.name.toLowerCase().includes(query.trim().toLowerCase()),
     )
-    closeModal()
-  }
 
-  function handleDelete(product) {
-    setModal({ type: 'delete', product })
-  }
+    function closeModal() {
+        setModal(null)
+    }
 
-  function handleConfirmDelete() {
-    setProducts(products.filter((p) => p.id !== modal.product.id))
-    closeModal()
-  }
+    function handleAdd() {
+        setModal({ type: "add" })
+    }
 
-  return (
-    <main className="app">
-      <PageHeader onAdd={handleAdd} />
-      <SearchBar
-        value={query}
-        onChange={setQuery}
-        total={filteredProducts.length}
-      />
-      <ProductList
-        products={filteredProducts}
-        onEdit={handleEdit}
-        onDelete={handleDelete}
-      />
-      <p className="app__summary">
-        Menampilkan {filteredProducts.length} dari {products.length} produk
-      </p>
+    function handleCreate(values: ProductFormValues) {
+        setProducts([...products, { id: nextId.current++, ...values }])
+        closeModal()
+    }
 
-      {modal?.type === 'add' && (
-        <Modal onClose={closeModal}>
-          <ProductForm onSubmit={handleCreate} onCancel={closeModal} />
-        </Modal>
-      )}
+    function handleEdit(product: Product) {
+        setModal({ type: "edit", product })
+    }
 
-      {modal?.type === 'edit' && (
-        <Modal onClose={closeModal}>
-          <ProductForm
-            product={modal.product}
-            onSubmit={handleUpdate}
-            onCancel={closeModal}
-          />
-        </Modal>
-      )}
+    function handleUpdate(values: ProductFormValues) {
+        if (modal?.type !== "edit") return
+        setProducts(
+            products.map((p) =>
+                p.id === modal.product.id ? { ...p, ...values } : p,
+            ),
+        )
+        closeModal()
+    }
 
-      {modal?.type === 'delete' && (
-        <Modal onClose={closeModal}>
-          <DeleteConfirm
-            product={modal.product}
-            onConfirm={handleConfirmDelete}
-            onCancel={closeModal}
-          />
-        </Modal>
-      )}
-    </main>
-  )
+    function handleDelete(product: Product) {
+        setModal({ type: "delete", product })
+    }
+
+    function handleConfirmDelete() {
+        if (modal?.type !== "delete") return
+        setProducts(products.filter((p) => p.id !== modal.product.id))
+        closeModal()
+    }
+
+    return (
+        <main className="app">
+            <PageHeader onAdd={handleAdd} />
+            <SearchBar
+                value={query}
+                onChange={setQuery}
+                total={filteredProducts.length}
+            />
+            <ProductList
+                products={filteredProducts}
+                onEdit={handleEdit}
+                onDelete={handleDelete}
+            />
+            <p className="app__summary">
+                Menampilkan {filteredProducts.length} dari {products.length} produk
+            </p>
+
+            {modal?.type === "add" && (
+                <Modal onClose={closeModal}>
+                    <ProductForm onSubmit={handleCreate} onCancel={closeModal} />
+                </Modal>
+            )}
+
+            {modal?.type === "edit" && (
+                <Modal onClose={closeModal}>
+                    <ProductForm
+                        product={modal.product}
+                        onSubmit={handleUpdate}
+                        onCancel={closeModal}
+                    />
+                </Modal>
+            )}
+
+            {modal?.type === "delete" && (
+                <Modal onClose={closeModal}>
+                    <DeleteConfirm
+                        product={modal.product}
+                        onConfirm={handleConfirmDelete}
+                        onCancel={closeModal}
+                    />
+                </Modal>
+            )}
+        </main>
+    )
 }
 
 export default App
