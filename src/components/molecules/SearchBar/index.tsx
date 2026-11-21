@@ -1,4 +1,4 @@
-import "./SearchBar.css"
+import "./styles.css"
 
 type SearchBarProps = {
     value: string
