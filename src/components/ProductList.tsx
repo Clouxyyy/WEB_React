@@ -1,4 +1,4 @@
-import ProductCard from "./ProductCard"
+import ProductCard from "./molecules/ProductCard"
 import type { Product } from "../types/product"
 import "./ProductList.css"
 
