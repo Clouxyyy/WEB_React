@@ -3,7 +3,7 @@ import { initialProducts } from "./data/products"
 import type { Product, ProductFormValues } from "./types/product"
 import PageHeader from "./components/PageHeader"
 import SearchBar from "./components/molecules/SearchBar"
-import ProductList from "./components/ProductList"
+import ProductGrid from "./components/organisms/ProductGrid"
 import Modal from "./components/molecules/Modal"
 import ProductForm from "./components/organisms/ProductForm"
 import DeleteConfirm from "./components/organisms/DeleteConfirm"
@@ -69,7 +69,7 @@ function App() {
                 onChange={setQuery}
                 total={filteredProducts.length}
             />
-            <ProductList
+            <ProductGrid
                 products={filteredProducts}
                 onEdit={handleEdit}
                 onDelete={handleDelete}
