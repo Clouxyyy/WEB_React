@@ -5,7 +5,7 @@ import PageHeader from "./components/PageHeader"
 import SearchBar from "./components/molecules/SearchBar"
 import ProductList from "./components/ProductList"
 import Modal from "./components/molecules/Modal"
-import ProductForm from "./components/ProductForm"
+import ProductForm from "./components/organisms/ProductForm"
 import DeleteConfirm from "./components/organisms/DeleteConfirm"
 import "./App.css"
 
