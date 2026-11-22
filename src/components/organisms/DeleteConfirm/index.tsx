@@ -1,6 +1,7 @@
-import { formatPrice } from "../utils/formatPrice"
-import type { Product } from "../types/product"
-import "./DeleteConfirm.css"
+import Button from "../../atoms/Button"
+import { formatPrice } from "../../../utils/formatPrice"
+import type { Product } from "../../../types/product"
+import "./styles.css"
 
 type DeleteConfirmProps = {
     product: Product
@@ -22,16 +23,16 @@ function DeleteConfirm({ product, onConfirm, onCancel }: DeleteConfirmProps) {
             <div className="delete-confirm__product">
                 <span>ID: {product.id}</span>
                 <strong>{product.name}</strong>
-                <span className="delete-confirm__price">{formatPrice(product.price)}</span>
+                <span className="delete-confirm__price">
+                    {formatPrice(product.price)}
+                </span>
             </div>
 
             <div className="form__actions delete-confirm__actions">
-                <button type="button" className="btn" onClick={onCancel}>
-                    Batal
-                </button>
-                <button type="button" className="btn btn-danger" onClick={onConfirm}>
+                <Button onClick={onCancel}>Batal</Button>
+                <Button variant="danger" onClick={onConfirm}>
                     Hapus Produk
-                </button>
+                </Button>
             </div>
         </div>
     )
