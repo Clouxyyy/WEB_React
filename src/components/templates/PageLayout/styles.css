@@ -5,10 +5,14 @@
   padding: 14px 24px;
   background: var(--surface);
   border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  z-index: 10;
 }
 
 .navbar__brand {
   font-weight: 700;
+  color: var(--color-ink);
 }
 
 .navbar__links {
@@ -20,13 +24,17 @@
   color: var(--muted);
   text-decoration: none;
   font-size: 0.9rem;
+  padding: 6px 14px;
+  border-radius: 999px;
 }
 
 .navbar__link:hover {
-  color: var(--text);
+  color: var(--color-accent-dark);
+  background: var(--color-accent-soft);
 }
 
 .navbar__link.active {
-  color: var(--primary);
+  color: var(--color-ink);
+  background: var(--color-accent);
   font-weight: 600;
 }
