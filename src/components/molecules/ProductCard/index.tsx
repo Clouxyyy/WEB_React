@@ -1,4 +1,5 @@
 import Button from "../../atoms/Button"
+import { Link } from "react-router"
 import { formatPrice } from "../../../utils/formatPrice"
 import type { Product } from "../../../types/product"
 import "./styles.css"
@@ -13,7 +14,11 @@ function ProductCard({ product, onEdit, onDelete }: ProductCardProps) {
     return (
         <article className="product-card">
             <span className="product-card__id">ID: {product.id}</span>
-            <h2 className="product-card__name">{product.name}</h2>
+            <h2 className="product-card__name">
+                <Link to={`/products/${product.id}`} className="product-card__link">
+                    {product.name}
+                </Link>
+            </h2>
             <p className="product-card__price">{formatPrice(product.price)}</p>
             <div className="product-card__actions">
                 <Button onClick={() => onEdit(product)}>Edit</Button>
