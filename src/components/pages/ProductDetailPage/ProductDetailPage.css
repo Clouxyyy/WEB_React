@@ -1,0 +1,22 @@
+.product-detail {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 32px 20px;
+}
+
+.product-detail__name {
+  margin: 6px 0 2px;
+  font-size: 1.6rem;
+}
+
+.detail__link {
+  display: inline-block;
+  margin-top: 20px;
+  color: var(--primary);
+  text-decoration: none;
+  font-size: 0.9rem;
+}
+
+.detail__link:hover {
+  text-decoration: underline;
+}
