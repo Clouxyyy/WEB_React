@@ -13,6 +13,9 @@ type ProductCardProps = {
 function ProductCard({ product, onEdit, onDelete }: ProductCardProps) {
     return (
         <article className="product-card">
+            <div className="product-card__tile" aria-hidden="true">
+                📦
+            </div>
             <span className="product-card__id">ID: {product.id}</span>
             <h2 className="product-card__name">
                 <Link to={`/products/${product.id}`} className="product-card__link">

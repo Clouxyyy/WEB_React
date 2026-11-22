@@ -4,39 +4,18 @@
   border-radius: var(--radius);
   box-shadow: var(--shadow);
   padding: 14px;
-}
-
-.product-card__id {
-  font-size: 0.7rem;
-  color: var(--muted);
-}
-
-.product-card__name {
-  margin: 6px 0 2px;
-  font-size: 1.15rem;
-}
-
-.product-card__price {
-  margin: 0 0 14px;
-  font-size: 1.1rem;
-  font-weight: 700;
-  color: var(--primary);
-}
-
-.product-card__link {
-  color: inherit;
-  text-decoration: none;
-}
-
-.product-card__link:hover {
-  text-decoration: underline;
-}
-
-.product-card__actions {
   display: flex;
-  gap: 8px;
+  flex-direction: column;
+  gap: 4px;
 }
 
-.product-card__actions .btn {
-  flex: 1;
+.product-card__tile {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  background: var(--color-accent-soft);
+  font-size: 2rem;
+  padding: 24px 0;
+  margin-bottom: 8px;
 }

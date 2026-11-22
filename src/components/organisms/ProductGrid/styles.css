@@ -1,7 +1,19 @@
 .product-list {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  grid-template-columns: 1fr;
   gap: 16px;
+}
+
+@media (min-width: 640px) {
+  .product-list {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .product-list {
+    grid-template-columns: repeat(4, 1fr);
+  }
 }
 
 .product-list__empty {
