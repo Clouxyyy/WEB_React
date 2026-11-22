@@ -6,7 +6,7 @@ import SearchBar from "./components/molecules/SearchBar"
 import ProductList from "./components/ProductList"
 import Modal from "./components/molecules/Modal"
 import ProductForm from "./components/ProductForm"
-import DeleteConfirm from "./components/DeleteConfirm"
+import DeleteConfirm from "./components/organisms/DeleteConfirm"
 import "./App.css"
 
 type ModalState =
