@@ -1,6 +1,12 @@
-import { useRef, useState } from "react"
+import { useEffect, useState } from "react"
 import { initialProducts } from "../../../data/products"
 import type { Product, ProductFormValues } from "../../../types/product"
+import {
+    createProduct,
+    deleteProduct,
+    getProductList,
+    updateProduct,
+} from "../../../data/product/repository/productRepository"
 import PageHeader from "../../organisms/PageHeader"
 import SearchBar from "../../molecules/SearchBar"
 import ProductGrid from "../../organisms/ProductGrid"
@@ -16,10 +22,36 @@ type ModalState =
     | { type: "delete"; product: Product }
 
 function ProductsPage() {
-    const [products, setProducts] = useState(initialProducts)
+    const [products, setProducts] = useState<Product[]>(initialProducts)
     const [query, setQuery] = useState("")
     const [modal, setModal] = useState<ModalState>(null)
-    const nextId = useRef(initialProducts.length + 1)
+    const [isLoading, setIsLoading] = useState(false)
+    const [error, setError] = useState("")
+
+    useEffect(() => {
+        let active = true
+        const timer = setTimeout(() => {
+            if (!active) return
+            void (async () => {
+                setIsLoading(true)
+                setError("")
+                try {
+                    const list = await getProductList(query ? { q: query } : undefined)
+                    if (!active) return
+                    setProducts(list)
+                } catch {
+                    if (!active) return
+                    setError("Gagal memuat produk dari server.")
+                } finally {
+                    if (active) setIsLoading(false)
+                }
+            })()
+        }, 0)
+        return () => {
+            active = false
+            clearTimeout(timer)
+        }
+    }, [query])
 
     const filteredProducts = products.filter((product) =>
         product.name.toLowerCase().includes(query.trim().toLowerCase()),
@@ -29,36 +61,52 @@ function ProductsPage() {
         setModal(null)
     }
 
-    function handleCreate(values: ProductFormValues) {
-        setProducts([...products, { id: nextId.current++, ...values }])
-        closeModal()
+    async function handleCreate(values: ProductFormValues) {
+        try {
+            const created = await createProduct(values)
+            setProducts([...products, created])
+            closeModal()
+        } catch {
+            setError("Gagal menyimpan produk.")
+        }
     }
 
-    function handleUpdate(values: ProductFormValues) {
+    async function handleUpdate(values: ProductFormValues) {
         if (modal?.type !== "edit") return
-        setProducts(
-            products.map((p) =>
-                p.id === modal.product.id ? { ...p, ...values } : p,
-            ),
-        )
-        closeModal()
+        try {
+            const updated = await updateProduct(modal.product.id, values)
+            setProducts(products.map((p) => (p.id === updated.id ? updated : p)))
+            closeModal()
+        } catch {
+            setError("Gagal memperbarui produk.")
+        }
     }
 
-    function handleConfirmDelete() {
+    async function handleConfirmDelete() {
         if (modal?.type !== "delete") return
-        setProducts(products.filter((p) => p.id !== modal.product.id))
-        closeModal()
+        try {
+            await deleteProduct(modal.product.id)
+            setProducts(products.filter((p) => p.id !== modal.product.id))
+            closeModal()
+        } catch {
+            setError("Gagal menghapus produk.")
+        }
     }
 
     return (
         <div className="products-page">
             <PageHeader onAdd={() => setModal({ type: "add" })} />
             <SearchBar value={query} onChange={setQuery} total={filteredProducts.length} />
-            <ProductGrid
-                products={filteredProducts}
-                onEdit={(product) => setModal({ type: "edit", product })}
-                onDelete={(product) => setModal({ type: "delete", product })}
-            />
+            {error && <p className="form__hint form__hint--error">{error}</p>}
+            {isLoading ? (
+                <p className="product-list__empty">Memuat produk...</p>
+            ) : (
+                <ProductGrid
+                    products={filteredProducts}
+                    onEdit={(product) => setModal({ type: "edit", product })}
+                    onDelete={(product) => setModal({ type: "delete", product })}
+                />
+            )}
             <p className="app__summary">
                 Menampilkan {filteredProducts.length} dari {products.length} produk
             </p>
