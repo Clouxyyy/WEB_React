@@ -1,0 +1,41 @@
+.form__id {
+  margin: 0 0 8px;
+  font-size: 0.75rem;
+  color: var(--muted);
+}
+
+.form__label {
+  display: block;
+  margin: 12px 0 6px;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.form__input {
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+
+.form__input:focus {
+  outline: 2px solid var(--primary);
+  outline-offset: -1px;
+}
+
+.form__hint {
+  margin: 4px 0 0;
+  font-size: 0.72rem;
+  color: var(--muted);
+}
+
+.form__hint--error {
+  color: var(--danger);
+}
+
+.form__actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-top: 20px;
+}
