@@ -1,6 +1,6 @@
 import type { ReactNode } from "react"
 import { NavLink } from "react-router"
-import "./PageLayout.css"
+import "./styles.css"
 
 type PageLayoutProps = {
     children: ReactNode

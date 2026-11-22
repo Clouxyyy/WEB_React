@@ -1,4 +1,4 @@
-import "./PageHeader.css"
+import "./styles.css"
 
 type PageHeaderProps = {
     onAdd: () => void

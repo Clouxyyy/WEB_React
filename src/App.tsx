@@ -1,7 +1,7 @@
 import { useRef, useState } from "react"
 import { initialProducts } from "./data/products"
 import type { Product, ProductFormValues } from "./types/product"
-import PageHeader from "./components/PageHeader"
+import PageHeader from "./components/organisms/PageHeader"
 import SearchBar from "./components/molecules/SearchBar"
 import ProductGrid from "./components/organisms/ProductGrid"
 import Modal from "./components/molecules/Modal"
