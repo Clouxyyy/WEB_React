@@ -42,25 +42,46 @@ src/data/product/
 
 ## Cara Menjalankan
 
-### Frontend
+### 1. Backend (express_product_api)
 
-1. `npm ci`
-2. `cp .env.example .env.local` lalu isi `VITE_API_BASE_URL` (misal `http://localhost:3000/api`)
-3. `npm run dev` → buka `http://localhost:5173`
+Clone dan jalankan service backend (repo terpisah: [express_product_api](https://github.com/Clouxyyy/express_product_api), Tugas 2):
 
-### Backend
+```bash
+git clone https://github.com/Clouxyyy/express_product_api.git
+cd express_product_api
+npm ci
 
-Jalankan service backend yang menyediakan endpoint:
+# siapkan database SQLite
+echo 'DATABASE_URL="file:./dev.db"' > .env
+npx prisma migrate deploy
+npx prisma generate
+npx prisma db seed        # mengisi 2 produk awal (opsional)
+
+npm start                 # server aktif di http://localhost:3000
+```
+
+Endpoint yang dipakai frontend:
 
 | Method | Path | Fungsi |
 |--------|------|--------|
-| GET | `/products?q=` | daftar produk (array langsung) |
+| GET | `/products` | daftar produk (array langsung) |
 | GET | `/products/:id` | satu produk |
 | POST | `/products` | tambah produk |
 | PUT | `/products/:id` | update produk |
 | DELETE | `/products/:id` | hapus produk |
 
-Backend harus mengizinkan origin frontend (CORS).
+> Catatan: pencarian `?q=` tidak didukung backend, jadi filter nama dilakukan di sisi frontend.
+
+### 2. Frontend
+
+```bash
+# di folder WEB_React
+npm ci
+cp .env.example .env.local    # VITE_API_BASE_URL=/api
+npm run dev                   # buka http://localhost:5173
+```
+
+Saat development, request ke `/api/*` diteruskan **proxy Vite** ke `http://localhost:3000` (prefix `/api` dilepas), sehingga tidak butuh CORS di backend. Jika backend sudah memasang middleware `cors`, `VITE_API_BASE_URL` juga bisa diisi langsung `http://localhost:3000/products`.
 
 ## Perintah
 
