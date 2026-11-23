@@ -1,117 +1,103 @@
 # Product Management (React + Vite)
 
-A simple app for managing a product list. Users can view products, search by name, and add, edit, and delete products through popups.
+Aplikasi manajemen produk dengan React Router, Tailwind CSS, TypeScript, dan integrasi backend.
 
 ## Features
 
-- Product list displayed as cards (ID, name, price)
-- Search products by name
-- **Add Product** popup with validation (name is required, price must be greater than 0)
-- **Edit Product** popup
-- **Delete Product** popup with confirmation
-- Popups can be closed with the × button, the Cancel button, a click outside the popup, or the Esc key
+- Daftar produk berbentuk kartu (ID, nama, harga) dari API backend
+- Pencarian produk berdasarkan nama
+- **Tambah Produk** popup dengan validasi (nama wajib, harga > 0) — tersimpan ke API
+- **Edit Produk** popup — tersimpan ke API
+- **Hapus Produk** popup dengan konfirmasi — terhapus via API
+- Halaman **detail produk** (`/products/:id`)
+- Halaman **404** untuk URL yang tidak terdaftar
+- Layout responsif (layar kecil sampai desktop)
 
 ## Tech Stack
 
-- [React](https://react.dev/)
+- [React](https://react.dev/) + TypeScript
 - [Vite](https://vite.dev/)
+- [React Router](https://reactrouter.com/)
+- [Tailwind CSS](https://tailwindcss.com/)
 - ESLint
 
-## Prerequisites
+## Struktur
 
-Make sure the following are installed:
+Atomic design:
 
-- [Git](https://git-scm.com/)
-- [Node.js](https://nodejs.org/) version 20 or newer (includes npm)
+```
+src/components/
+├── atoms/        # Button, Input
+├── molecules/    # Modal, FormField, ProductCard, SearchBar
+├── organisms/    # PageHeader, ProductGrid, ProductForm, DeleteConfirm
+├── templates/    # PageLayout (navbar + Outlet)
+└── pages/        # ProductsPage, ProductDetailPage, NotFoundPage
 
-Check the versions:
-
-```bash
-git --version
-node -v
-npm -v
+src/data/product/
+├── param/        # parameter request
+├── source/       # fetch HTTP
+├── model/        # validasi response
+└── repository/   # pemetaan payload → model
 ```
 
-## Getting Started
+## Cara Menjalankan
 
-### 1. Clone the repository
+### 1. Backend (express_product_api)
 
-```bash
-git clone https://github.com/Clouxyyy/WEB_React.git
-cd WEB_React
-```
-
-Or with SSH:
+Clone dan jalankan service backend (repo terpisah: [express_product_api](https://github.com/Clouxyyy/express_product_api), Tugas 2):
 
 ```bash
-git clone git@github.com:Clouxyyy/WEB_React.git
-cd WEB_React
+git clone https://github.com/Clouxyyy/express_product_api.git
+cd express_product_api
+npm ci
+
+# siapkan database SQLite
+echo 'DATABASE_URL="file:./dev.db"' > .env
+npx prisma migrate deploy
+npx prisma generate
+npx prisma db seed        # mengisi 2 produk awal (opsional)
+
+npm start                 # server aktif di http://localhost:3000
 ```
 
-### 2. Switch to the `tugas-3` branch
+Endpoint yang dipakai frontend:
+
+| Method | Path | Fungsi |
+|--------|------|--------|
+| GET | `/products` | daftar produk (array langsung) |
+| GET | `/products/:id` | satu produk |
+| POST | `/products` | tambah produk |
+| PUT | `/products/:id` | update produk |
+| DELETE | `/products/:id` | hapus produk |
+
+> Catatan: pencarian `?q=` tidak didukung backend, jadi filter nama dilakukan di sisi frontend.
+
+### 2. Frontend
 
 ```bash
-git checkout tugas-3
+# di folder WEB_React
+npm ci
+cp .env.example .env.local    # VITE_API_BASE_URL=/api
+npm run dev                   # buka http://localhost:5173
 ```
 
-Skip this step if the branch has already been merged into `main`.
+Saat development, request ke `/api/*` diteruskan **proxy Vite** ke `http://localhost:3000` (prefix `/api` dilepas), sehingga tidak butuh CORS di backend. Jika backend sudah memasang middleware `cors`, `VITE_API_BASE_URL` juga bisa diisi langsung `http://localhost:3000/products`.
 
-### 3. Install dependencies
-
-```bash
-npm install
-```
-
-### 4. Start the development server
-
-```bash
-npm run dev
-```
-
-Open the address shown in the terminal (usually http://localhost:5173) in your browser.
-
-Press `Ctrl + C` in the terminal to stop the server.
-
-### 5. Other commands (optional)
+## Perintah
 
 | Command | Description |
-|---|---|
-| `npm run build` | Create a production build in the `dist/` folder |
-| `npm run preview` | Preview the production build locally |
-| `npm run lint` | Check the code with ESLint |
+|---------|-------------|
+| `npm run dev` | development server |
+| `npm run build` | production build |
+| `npm run lint` | ESLint |
+| `npm run typecheck` | TypeScript check |
+| `npm test` | unit test |
 
-## Project Structure
+## Routes
 
-```
-WEB_React/
-├── public/
-│   └── favicon.svg
-├── src/
-│   ├── components/
-│   │   ├── DeleteConfirm.jsx   # delete confirmation popup content
-│   │   ├── Modal.jsx           # popup wrapper (overlay, close button, Esc)
-│   │   ├── PageHeader.jsx      # page title and Add Product button
-│   │   ├── ProductCard.jsx     # a single product card
-│   │   ├── ProductForm.jsx     # form for adding and editing products
-│   │   ├── ProductList.jsx     # list of product cards
-│   │   ├── SearchBar.jsx       # search input and product count
-│   │   └── *.css               # styles for each component
-│   ├── data/
-│   │   └── products.js         # initial product data
-│   ├── utils/
-│   │   └── formatPrice.js      # formats prices as rupiah (Rp12.000)
-│   ├── App.jsx                 # main state and component wiring
-│   ├── App.css
-│   ├── index.css               # global styles and color variables
-│   └── main.jsx                # application entry point
-├── index.html
-├── eslint.config.js
-├── package.json
-└── vite.config.js
-```
-
-## Data Flow
-
-- The `products`, `query`, and `modal` states live in `App.jsx`.
-- Data is passed down to child components through props (one-way data flow).
-- Child components notify `App` through callback functions (`onAdd`, `onEdit`, `onDelete`, `onSubmit`, `onConfirm`, `onCancel`).
+| URL | Halaman |
+|-----|---------|
+| `/` | redirect ke `/products` |
+| `/products` | daftar produk |
+| `/products/:id` | detail produk |
+| `*` | 404 |
