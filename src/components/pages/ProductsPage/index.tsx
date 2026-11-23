@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react"
-import { initialProducts } from "../../../data/products"
 import type { Product, ProductFormValues } from "../../../types/product"
 import {
     createProduct,
@@ -22,10 +21,10 @@ type ModalState =
     | { type: "delete"; product: Product }
 
 function ProductsPage() {
-    const [products, setProducts] = useState<Product[]>(initialProducts)
+    const [products, setProducts] = useState<Product[]>([])
     const [query, setQuery] = useState("")
     const [modal, setModal] = useState<ModalState>(null)
-    const [isLoading, setIsLoading] = useState(false)
+    const [isLoading, setIsLoading] = useState(true)
     const [error, setError] = useState("")
 
     useEffect(() => {
